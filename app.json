@@ -1,0 +1,12 @@
+{
+  "name": "notice-board-mobile",
+  "displayName": "notice-board-mobile",
+  "expo": {
+    "name": "notice-board-mobile",
+    "slug": "notice-board-mobile",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
