@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 // import {createDrawerNavigator} from '@react-navigation/drawer';
 import HomePage from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
+import SignUp from "../Pages/Signup/Signup";
 
 const Stack = createStackNavigator();
 // const Drawer = createDrawerNavigator();
@@ -16,6 +17,7 @@ function MyStack() {
                 <>
                     <Stack.Screen name="Home" component={HomePage}/>
                     <Stack.Screen name="LogIn" component={Login}/>
+                    <Stack.Screen name="SignUp" component={SignUp}/>
                 </>
             ) : (
                 <>

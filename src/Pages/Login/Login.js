@@ -1,15 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
-
-// import LoginString from '../Login/LoginStrings';
-import {Card} from 'react-bootstrap';
-
-import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Button, Text, TextInput, View} from "react-native";
 
 export default class Login extends React.Component {
@@ -94,7 +85,7 @@ export default class Login extends React.Component {
                     <Button
                         title="Sign Up"
                         // onPress={() => navigation.navigate('SignUp')}
-                        onPress={() => alert('hello')}
+                        onPress={() => this.props.navigation.navigate('SignUp')}
                     />
                 </View>
                 {/*<div className="error">*/}
