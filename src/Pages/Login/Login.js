@@ -1,7 +1,8 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import LoginString from "../../CONSTS/LoginStrings";
 import axios from 'axios';
 import {Button, Text, TextInput, View} from "react-native";
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Login extends React.Component {
     constructor(props) {
@@ -29,28 +30,40 @@ export default class Login extends React.Component {
         // }
     }
 
-    async handleSubmit(event) {
-        // event.preventDefault();
-        // await axios.post('/api/user/auth', {
-        //     email: this.state.email,
-        //     password: this.state.password,
-        // },)
-        //     .then((currentdata) => {
-        //         const {data} = currentdata;
-        //         if (currentdata) {
-        //             localStorage.setItem(LoginString.FirebaseDocumentId, data[0].docId);
-        //             localStorage.setItem(LoginString.ID, data[0].id);
-        //             localStorage.setItem(LoginString.Name, data[0].name);
-        //             localStorage.setItem(LoginString.Email, data[0].email);
-        //             localStorage.setItem(LoginString.Password, data[0].password);
-        //             localStorage.setItem(LoginString.PhotoURL, data[0].URL);
-        //             localStorage.setItem(LoginString.Description, data[0].description);
-        //             this.props.history.push('/chat');
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         document.getElementById('1').innerHTML = 'incorrect email/password or poor internet';
-        //     });
+    async handleSubmit() {
+        try {
+            // await AsyncStorage.setItem('test', this.state.email);
+            // console.log(await AsyncStorage.getItem('test'));
+            // await AsyncStorage.clear()
+
+            await axios.post('https://web-notice-board-server-dev.herokuapp.com/api/user/auth', {
+                email: this.state.email,
+                password: this.state.password,
+            },)
+                .then((currentdata) => {
+                    const {data} = currentdata;
+                    if (currentdata) {
+                        AsyncStorage.setItem(LoginString.FirebaseDocumentId, data[0].docId);
+                        AsyncStorage.setItem(LoginString.ID, data[0].id);
+                        AsyncStorage.setItem(LoginString.Name, data[0].name);
+                        AsyncStorage.setItem(LoginString.Email, data[0].email);
+                        AsyncStorage.setItem(LoginString.Password, data[0].password);
+                        AsyncStorage.setItem(LoginString.PhotoURL, data[0].URL);
+                        AsyncStorage.setItem(LoginString.Description, data[0].description);
+                    }
+                })
+                .then(async () => {
+                    let keys = [];
+                    keys = await AsyncStorage.getAllKeys();
+                    console.log(keys);
+                })
+                .catch((error) => {
+                    // document.getElementById('1').innerHTML = 'incorrect email/password or poor internet';
+                });
+        } catch(e) {
+            // save error
+        }
+
     }
 
     render() {
