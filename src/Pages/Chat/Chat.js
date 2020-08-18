@@ -3,10 +3,9 @@ import axios from 'axios';
 import LoginString from '../../CONSTS/LoginStrings';
 // import firebase from '../../Services/firebase';
 // import images from '../../ProjectImages/ProjectImages';
-// import ChatBox from '../Chatbox/Chatbox';
 // import WelcomeBoard from '../Welcome/Welcome';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Button, FlatList, Image, StyleSheet, Text, TouchableHighlight, View} from "react-native";
+import {FlatList, Image, StyleSheet, Text, TouchableHighlight, View, ScrollView} from "react-native";
 
 
 const styles = StyleSheet.create({
@@ -39,15 +38,6 @@ export default class Chat extends React.Component {
         this.currentUserId = await AsyncStorage.getItem(LoginString.ID);
         this.currentUserPhoto = await AsyncStorage.getItem(LoginString.PhotoURL);
         this.currentUserName = await AsyncStorage.getItem(LoginString.Name);
-    };
-
-    logout = async () => {
-        try {
-            await AsyncStorage.clear();
-            console.log("Log out!");
-        } catch (error) {
-
-        }
     };
 
     onProfileClick = () => {
@@ -154,7 +144,7 @@ export default class Chat extends React.Component {
     renderListUser = ({item}) => {
         if (item.id !== this.currentUserId) {
             return (
-                <View>
+                <ScrollView>
                     <TouchableHighlight
                         onPress={() => {
                             this.notificationErase(item.id);
@@ -183,7 +173,7 @@ export default class Chat extends React.Component {
                         {/*        <p id={item.key} className="newmessages">New</p>*/}
                         {/*    </div> : null}*/}
                     </TouchableHighlight>
-                </View>)
+                </ScrollView>)
         } else {
             console.log('No user is present');
             return (<Text>Error</Text>)
@@ -267,7 +257,6 @@ export default class Chat extends React.Component {
                                 source={this.currentUserPhoto}
                             />
                         </TouchableHighlight>
-                        <Button title="Logout" onPress={() => this.logout}/>
                         <View>
                             {/*<TextInput*/}
                             {/*       type="text"*/}

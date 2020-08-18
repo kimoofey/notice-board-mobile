@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {toast, ToastContainer} from "react-toastify";
 import {NavigationContainer} from "@react-navigation/native";
-import MyStack from "./Utils/Navigation";
+import MyStack from "./Screens/Screens";
 
 class App extends Component {
     showToast = (type, message) => {
