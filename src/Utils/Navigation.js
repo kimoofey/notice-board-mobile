@@ -6,6 +6,7 @@ import HomePage from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
 import SignUp from "../Pages/Signup/Signup";
 import Chat from "../Pages/Chat/Chat";
+import ChatBox from "../Pages/Chatbox/Chatbox";
 
 const Stack = createStackNavigator();
 
@@ -19,14 +20,14 @@ class MyStack extends Component {
         return (
             result ? (
                 <>
-                    {/*<Stack.Screen name="ChatBox" component={ChatBox}/>*/}
                     <Stack.Screen name="ChatRoom" component={Chat}/>
+                    <Stack.Screen name="ChatBox" component={ChatBox}/>
                 </>
             ) : (
                 <>
                     <Stack.Screen name="Home" component={HomePage}/>
-                    <Stack.Screen name="Log In" component={Login}/>
-                    <Stack.Screen name="Sign Up" component={SignUp}/>
+                    <Stack.Screen name="LogIn" component={Login}/>
+                    <Stack.Screen name="SignUp" component={SignUp}/>
                 </>
             )
         )

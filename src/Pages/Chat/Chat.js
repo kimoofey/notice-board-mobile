@@ -38,7 +38,6 @@ export default class Chat extends React.Component {
         this.currentUserDocumentId = await AsyncStorage.getItem(LoginString.FirebaseDocumentId);
         this.currentUserId = await AsyncStorage.getItem(LoginString.ID);
         this.currentUserPhoto = await AsyncStorage.getItem(LoginString.PhotoURL);
-
         this.currentUserName = await AsyncStorage.getItem(LoginString.Name);
     };
 
@@ -123,46 +122,49 @@ export default class Chat extends React.Component {
     //
     // };
     //
-    // notificationErase = (itemId) => {
-    //     this.state.displayedContactswithNotification.forEach((el) => {
-    //         if (el.notificationId.length > 0) {
-    //             if (el.notificationId !== itemId) {
-    //                 this.notificationMessagesErase.push(
-    //                     {
-    //                         notificationId: el.notificationId,
-    //                         number: el.number,
-    //                     },
-    //                 );
-    //             }
-    //         }
-    //
-    //     });
-    //     this.updaterenderlist();
-    // };
-    //
-    // updaterenderlist = () => {
-    //     axios.put('/api/user/messages', {
-    //         docId: this.currentUserDocumentId,
-    //         messages: this.notificationMessagesErase,
-    //     })
-    //         .then((response) => {
-    //             this.setState({
-    //                 displayedContactswithNotification: this.notificationMessagesErase,
-    //             });
-    //         });
-    // };
-    //
+    notificationErase = (itemId) => {
+        this.state.displayedContactswithNotification.forEach((el) => {
+            if (el.notificationId.length > 0) {
+                if (el.notificationId !== itemId) {
+                    this.notificationMessagesErase.push(
+                        {
+                            notificationId: el.notificationId,
+                            number: el.number,
+                        },
+                    );
+                }
+            }
+
+        });
+        this.updaterenderlist();
+    };
+
+    updaterenderlist = () => {
+        axios.put('https://web-notice-board-server-dev.herokuapp.com/api/user/messages', {
+            docId: this.currentUserDocumentId,
+            messages: this.notificationMessagesErase,
+        })
+            .then((response) => {
+                this.setState({
+                    displayedContactswithNotification: this.notificationMessagesErase,
+                });
+            });
+    };
+
     renderListUser = ({item}) => {
         if (item.id !== this.currentUserId) {
             return (
                 <View>
                     <TouchableHighlight
                         onPress={() => {
-                            // this.notificationErase(item.id);
-                            // this.setState({
-                            //     currentPeerUser: item,
-                            //     displayedContactswithNotification: this.notificationMessagesErase,
-                            // });
+                            this.notificationErase(item.id);
+                            this.setState({
+                                currentPeerUser: item,
+                                displayedContactswithNotification: this.notificationMessagesErase,
+                            });
+                            this.props.navigation.navigate('ChatBox', {
+                                currentPeerUser: item
+                            });
                             // document.getElementById(item.key).style.backgroundColor = '#fff';
                             // if (document.getElementById(item.key)) {
                             //     document.getElementById(item.key).style.color = '#fff';
