@@ -52,11 +52,6 @@ export default class Login extends React.Component {
                         AsyncStorage.setItem(LoginString.Description, data[0].description);
                     }
                 })
-                .then(async () => {
-                    let keys = [];
-                    keys = await AsyncStorage.getAllKeys();
-                    console.log(keys);
-                })
                 .catch((error) => {
                     // document.getElementById('1').innerHTML = 'incorrect email/password or poor internet';
                 });

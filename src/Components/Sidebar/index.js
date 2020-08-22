@@ -21,7 +21,7 @@ const Sidebar = props => {
         }
     };
 
-    const userInfo = getUserInfo();
+    getUserInfo();
 
     return (
         <ScrollView>
@@ -45,7 +45,7 @@ const Sidebar = props => {
             </View>
             <DrawerItem
                 label="Logout"
-                onPress={() => alert('Logout')}
+                onPress={() => logout()}
             />
         </ScrollView>
     );

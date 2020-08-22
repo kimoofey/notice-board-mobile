@@ -174,9 +174,6 @@ export default class Chat extends React.Component {
                         {/*    </div> : null}*/}
                     </TouchableHighlight>
                 </ScrollView>)
-        } else {
-            console.log('No user is present');
-            return (<Text>Error</Text>)
         }
     };
     //

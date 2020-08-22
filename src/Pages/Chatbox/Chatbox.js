@@ -115,7 +115,6 @@ export default class ChatBox extends React.Component {
     };
 
     onSendMessage = (messages = []) => {
-        console.log(messages);
         let notificationMessages = [];
         messages.forEach(content => {
             if (this.state.isShowStiker === 2) {
