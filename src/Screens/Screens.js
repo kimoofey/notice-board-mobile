@@ -31,12 +31,26 @@ const ChatNavigator = () => {
 };
 
 class MyStack extends Component {
-    isSigned = async () => await AsyncStorage.getItem('email');
+    constructor(props) {
+        super(props);
+        this.state = {
+            auth: false,
+        }
+    }
 
+    isSigned = async () => {
+        try {
+            return await AsyncStorage.getItem('email').then((result) => this.setState({auth: result}));
+        } catch (error) {
+
+        }
+        // const setResult = await AsyncStorage.setItem('email', 'kimoofey@gmail.com');
+    }
+// {"_40": 0, "_55": null, "_65": 0, "_72": null}
     generateStack = () => {
-        const result = this.isSigned();
+        this.isSigned();
         return (
-            result ? (
+            this.state.auth ? (
                 <Drawer.Navigator drawerContent={props => <Sidebar {...props}/>} backBehavior="history">
                     <Drawer.Screen name="Chat" component={ChatNavigator}/>
                     <Drawer.Screen name="Settings" component={Settings}/>
