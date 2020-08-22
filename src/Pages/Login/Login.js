@@ -50,6 +50,8 @@ export default class Login extends React.Component {
                         AsyncStorage.setItem(LoginString.Password, data[0].password);
                         AsyncStorage.setItem(LoginString.PhotoURL, data[0].URL);
                         AsyncStorage.setItem(LoginString.Description, data[0].description);
+                        AsyncStorage.setItem(LoginString.passCode, data[0].passCode);
+                        AsyncStorage.setItem(LoginString.safeCode, data[0].safeCode);
                     }
                 })
                 .catch((error) => {
@@ -76,6 +78,7 @@ export default class Login extends React.Component {
                 <TextInput
                     placeholder="Password"
                     onChangeText={this.handleChangePassword}
+                    secureTextEntry={true}
                     value={this.state.password}
                 />
                 {/*<FormControlLabel*/}

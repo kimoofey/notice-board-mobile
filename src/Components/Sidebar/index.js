@@ -22,6 +22,9 @@ const Sidebar = props => {
     };
 
     getUserInfo();
+    const {state, ...rest} = props;
+    const newState = {...state};
+    newState.routes = newState.routes.filter(item => item.name !== 'Security');
 
     return (
         <ScrollView>
@@ -41,7 +44,7 @@ const Sidebar = props => {
             </ImageBackground>
 
             <View style={styles.container}>
-                <DrawerItemList {...props}/>
+                <DrawerItemList state={newState} {...rest}/>
             </View>
             <DrawerItem
                 label="Logout"

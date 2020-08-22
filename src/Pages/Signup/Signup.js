@@ -65,6 +65,7 @@ export default class SignUp extends Component {
                 <TextInput
                     placeholder="Password"
                     onChangeText={this.handleChangePassword}
+                    secureTextEntry={true}
                     value={this.state.password}
                 />
                 <Text style={{color: 'grey'}}>Password :length Greater

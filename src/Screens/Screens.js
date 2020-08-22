@@ -8,6 +8,7 @@ import Login from "../Pages/Login/Login";
 import SignUp from "../Pages/Signup/Signup";
 import Chat from "../Pages/Chat/Chat";
 import ChatBox from "../Pages/Chatbox/Chatbox";
+import Security from "../Pages/Security";
 import Sidebar from '../Components/Sidebar';
 
 const Stack = createStackNavigator();
@@ -44,17 +45,18 @@ class MyStack extends Component {
         } catch (error) {
 
         }
-        // const setResult = await AsyncStorage.setItem('email', 'kimoofey@gmail.com');
-    }
-// {"_40": 0, "_55": null, "_65": 0, "_72": null}
+    };
+
     generateStack = () => {
         this.isSigned();
         return (
             this.state.auth ? (
-                <Drawer.Navigator drawerContent={props => <Sidebar {...props}/>} backBehavior="history">
+                <Drawer.Navigator drawerContent={props => <Sidebar {...props}/>} backBehavior="history"
+                                  initialRouteName="Security">
                     <Drawer.Screen name="Chat" component={ChatNavigator}/>
                     <Drawer.Screen name="Settings" component={Settings}/>
                     <Drawer.Screen name="FAQ" component={FAQ}/>
+                    <Drawer.Screen name="Security" component={Security} options={{gestureEnabled: false}}/>
                 </Drawer.Navigator>
             ) : (
                 <Stack.Navigator>
