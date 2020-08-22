@@ -1,21 +1,28 @@
-import React from "react";
+import React, {useState} from "react";
 import {Image, ImageBackground, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {DrawerItem, DrawerItemList} from "@react-navigation/drawer";
 import AsyncStorage from "@react-native-community/async-storage";
-
-const logout = async () => {
-    try {
-        await AsyncStorage.clear();
-    } catch (error) {
-
-    }
-};
-
+import LoginString from "../../CONSTS/LoginStrings";
 
 const Sidebar = props => {
-    // const {state, ...rest} = props;
-    // const newState = {...state};
-    // newState.routes = newState.routes.filter(item => item.name !== 'Chat');
+    const [name, setName] = useState('');
+    const [avatar, setAvatar] = useState('');
+
+    const getUserInfo = () => {
+        AsyncStorage.getItem(LoginString.Name).then((result) => setName(result));
+        AsyncStorage.getItem(LoginString.PhotoURL).then((result) => setAvatar(result));
+    };
+
+    const logout = async () => {
+        try {
+            await AsyncStorage.clear();
+        } catch (error) {
+
+        }
+    };
+
+    const userInfo = getUserInfo();
+
     return (
         <ScrollView>
             <ImageBackground
@@ -26,11 +33,11 @@ const Sidebar = props => {
             >
                 <Image
                     source={{
-                        uri: "https://source.unsplash.com/random",
+                        uri: avatar,
                     }}
                     style={styles.profile}
                 />
-                <Text styes={styles.name}>Scrollbar</Text>
+                <Text styes={styles.name}>{name}</Text>
             </ImageBackground>
 
             <View style={styles.container}>
