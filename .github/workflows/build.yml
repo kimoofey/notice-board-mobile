@@ -19,9 +19,18 @@ jobs:
       - name: Install npm dependencies
         run: |
           npm install
+      - name: Create keystore for sign
+        working-directory: ./android/app
+        run: echo ${{secrets.KEYSTORE_FILE}} | base64 -d > debug.keystore
       - name: Build Android Release
+        working-directory: ./android
         run: |
-          cd android && ./gradlew assembleRelease
+          chmod +x ./gradlew
+          export ORG_GRADLE_PROJECT_RELEASE_STORE_FILE=/app/debug.keystore
+          export ORG_GRADLE_PROJECT_RELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
+          export ORG_GRADLE_PROJECT_RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }}
+          export ORG_GRADLE_PROJECT_RELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
+          ./gradlew assembleRelease
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
