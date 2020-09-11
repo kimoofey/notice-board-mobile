@@ -10,6 +10,8 @@ import Chat from "../Pages/Chat/Chat";
 import ChatBox from "../Pages/Chatbox/Chatbox";
 import Security from "../Pages/Security";
 import Sidebar from '../Components/Sidebar';
+import FakeChat from "../Pages/Fake/Chat";
+import FakeChatBox from "../Pages/Fake/Chatbox";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -27,6 +29,15 @@ const ChatNavigator = () => {
         <Stack.Navigator>
             <Stack.Screen name="ChatRoom" component={Chat}/>
             <Stack.Screen name="ChatBox" component={ChatBox} options={{gestureDirection: "horizontal"}}/>
+        </Stack.Navigator>
+    )
+};
+
+const FakeNavigator = () => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="ChatRoom" component={FakeChat}/>
+            <Stack.Screen name="ChatBox" component={FakeChatBox} options={{gestureDirection: "horizontal"}}/>
         </Stack.Navigator>
     )
 };
@@ -57,6 +68,7 @@ class MyStack extends Component {
                     <Drawer.Screen name="Settings" component={Settings}/>
                     <Drawer.Screen name="FAQ" component={FAQ}/>
                     <Drawer.Screen name="Security" component={Security} options={{gestureEnabled: false}}/>
+                    <Drawer.Screen name="Fake" component={FakeNavigator} options={{gestureEnabled: false}}/>
                 </Drawer.Navigator>
             ) : (
                 <Stack.Navigator>

@@ -24,7 +24,7 @@ const Sidebar = props => {
     getUserInfo();
     const {state, ...rest} = props;
     const newState = {...state};
-    newState.routes = newState.routes.filter(item => item.name !== 'Security');
+    newState.routes = newState.routes.filter(item => ((item.name !== 'Security') && (item.name !== 'Fake')));
 
     return (
         <ScrollView>

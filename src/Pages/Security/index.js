@@ -16,7 +16,8 @@ const Security = ({navigation}) => {
                 break;
             }
             case safeCode: {
-                console.log('safeCode correct!');
+                setPassword('');
+                navigation.navigate('Fake');
                 break;
             }
             default: {
