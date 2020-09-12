@@ -1,7 +1,6 @@
 import React from 'react';
-// import { Card } from 'react-bootstrap';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 // import ReactLoading from 'react-loading';
-import axios from 'axios';
 // import 'react-toastify/dist/ReactToastify.css';
 // import firebase from '../../Services/firebase';
 // import images from '../../ProjectImages/ProjectImages';
@@ -12,7 +11,18 @@ import LoginString from '../../CONSTS/LoginStrings';
 import AsyncStorage from '@react-native-community/async-storage';
 import {GiftedChat} from 'react-native-gifted-chat';
 import firebase from '../../Services';
-import {Button, FlatList, Image, StyleSheet, Text, TouchableHighlight, View} from "react-native";
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center"
+    },
+    horizontal: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        padding: 10
+    }
+});
 
 export default class ChatBox extends React.Component {
     constructor(props) {
@@ -24,33 +34,20 @@ export default class ChatBox extends React.Component {
             messages: []
 
         };
-        this.getUserData();
         this.currentPeerUser = this.props.route.params.currentPeerUser;
         this.groupChatId = null;
         this.listMessage = [];
         this.currentPeerUserMessages = [];
         this.removeListener = null;
         this.currentPhotoFile = null;
-
-        axios.get('https://web-notice-board-server-dev.herokuapp.com/api/user/messages', {
-            params: {
-                docId: this.currentPeerUser.documentkey,
-            },
-        })
-            .then((response) => {
-                this.currentPeerUserMessages = response.data;
-            });
     }
 
-    getUserData = () => {
-        // this.currentUserName = await AsyncStorage.getItem(LoginString.Name);
-        this.currentUserName = "Nick";
-        // this.currentUserId = await AsyncStorage.getItem(LoginString.ID);
-        this.currentUserId = "u2Z3JYCwscekoRugTo7El1u2ppx1";
-        // this.currentUserPhoto = await AsyncStorage.getItem(LoginString.PhotoURL);
-        this.currentUserPhoto = "https://placeimg.com/140/140/any";
-        // this.currentUserDocumentId = await AsyncStorage.getItem(LoginString.FirebaseDocumentId);
-        // this.stateChanged = await AsyncStorage.getItem(LoginString.UPLOAD_CHANGED);
+    getUserData = async () => {
+        const values = await AsyncStorage.multiGet([LoginString.Name, LoginString.ID, LoginString.PhotoURL]);
+        this.currentUserName = values[0][1];
+        this.currentUserId = values[1][1];
+        this.currentUserPhoto = values[2][1];
+
     };
     //
     // componentDidUpdate() {
@@ -65,8 +62,11 @@ export default class ChatBox extends React.Component {
     // }
     //
     componentDidMount() {
-        this.getListHistory();
+        this.getUserData().then(() => {
+            this.getListHistory().then();
+        });
     }
+
     //
     // componentWillUnmount() {
     //     if (this.removeListener) {
@@ -74,12 +74,11 @@ export default class ChatBox extends React.Component {
     //     }
     // }
     //
-    getListHistory = () => {
+    getListHistory = async () => {
         if (this.removeListener) {
             this.removeListener();
         }
         this.listMessage.length = 0;
-        this.setState({ isLoading: true });
         if (
             this.hashString(this.currentUserId) <=
             this.hashString(this.currentPeerUser.id)
@@ -88,13 +87,8 @@ export default class ChatBox extends React.Component {
         } else {
             this.groupChatId = `${this.currentPeerUser.id}-${this.currentUserId}`;
         }
-        // axios.get('https://web-notice-board-server-dev.herokuapp.com/api/messages', {
-        //     params: {
-        //         groupChatId: this.groupChatId,
-        //     },
-        // });
-            // .then((response) => console.log(response));
 
+        this.setState({isLoading: true});
         this.removeListener = firebase.firestore()
             .collection('Messages')
             .doc(this.groupChatId)
@@ -106,19 +100,20 @@ export default class ChatBox extends React.Component {
                             this.listMessage.push(change.doc.data());
                         }
                     });
-                    this.setState({ isLoading: false });
+                    this.setState({isLoading: false});
                 },
                 err => {
                     this.props.showToast(0, err.toString());
                 },
             );
+        // this.setState({isLoading: false});
     };
 
     onSendMessage = (messages = []) => {
         let notificationMessages = [];
         messages.forEach(content => {
             if (this.state.isShowStiker === 2) {
-                this.setState({ isShowStiker: false });
+                this.setState({isShowStiker: false});
             }
             if (content.text === '') {
                 return;
@@ -135,6 +130,7 @@ export default class ChatBox extends React.Component {
                 idTo: this.currentPeerUser.id,
                 user: content.user,
             };
+
             firebase.firestore()
                 .collection('Messages')
                 .doc(this.groupChatId)
@@ -142,7 +138,7 @@ export default class ChatBox extends React.Component {
                 .doc(timestamp)
                 .set(itemMessage)
                 .then(() => {
-                    this.setState({ inputValue: '' });
+                    this.setState({inputValue: ''});
                 });
             this.currentPeerUserMessages.map((item) => {
                 if (item.notificationId !== this.currentUserId) {
@@ -533,12 +529,20 @@ export default class ChatBox extends React.Component {
     // }
 
     render() {
-        return(
-            <GiftedChat
-            messages={this.listMessage.sort((a, b) => moment(b.createdAt) - moment(a.createdAt))}
-            onSend={messages => this.onSendMessage(messages)}
-            user={{_id: this.currentUserId, name: this.currentUserName, avatar: this.currentUserPhoto}}
-            />
+        return (
+            <View style={[styles.container, styles.horizontal]}>
+                {
+                    this.state.isLoading
+                        ? <ActivityIndicator size="large"/>
+                        : (
+                            <GiftedChat
+                                messages={this.listMessage.sort((a, b) => moment(b.createdAt) - moment(a.createdAt))}
+                                onSend={messages => this.onSendMessage(messages)}
+                                user={{_id: this.currentUserId, name: this.currentUserName, avatar: this.currentUserPhoto}}
+                            />
+                        )
+                }
+            </View>
         )
         // return (
         //     <Card className="viewChatBoard">

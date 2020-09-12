@@ -1,13 +1,14 @@
 import * as firebase from 'firebase';
+import Config from 'react-native-config'
 
 var firebaseConfig = {
-    apiKey: "AIzaSyDaQVPMLwz67AHA-oB0c0ECm70IegI0fHo",
-    authDomain: "testing-chat-10f25.firebaseapp.com",
-    databaseURL: "https://testing-chat-10f25.firebaseio.com",
-    projectId: "testing-chat-10f25",
-    storageBucket: "testing-chat-10f25.appspot.com",
-    messagingSenderId: "727121066265",
-    appId: "1:727121066265:web:23e5ac8456733f7306ed88"
+    apiKey: Config.APIKEY,
+    authDomain: Config.AUTHDOMAIN,
+    databaseURL: Config.DATABASEURL,
+    projectId: Config.PROJECTID,
+    storageBucket: Config.STORAGEBUCKET,
+    messagingSenderId: Config.MESSAGINGSENDERID,
+    appId: Config.APPID
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);

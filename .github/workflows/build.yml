@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - dev
 jobs:
   install-and-test:
     runs-on: ubuntu-latest
@@ -19,6 +20,17 @@ jobs:
       - name: Install npm dependencies
         run: |
           npm install
+      - name: Create env file
+        working-directory: ./android/app
+        run: |
+          touch .env
+          echo ${{ secrets.APIKEY }} >> .env
+          echo ${{ secrets.AUTHDOMAIN }} >> .env
+          echo ${{ secrets.DATABASEURL }} >> .env
+          echo ${{ secrets.PROJECTID }} >> .env
+          echo ${{ secrets.STORAGEBUCKET }} >> .env
+          echo ${{ secrets.MESSAGINGSENDERID }} >> .env
+          echo ${{ secrets.APPID }} >> .env
       - name: Create keystore for sign
         working-directory: ./android/app
         run: echo ${{secrets.KEYSTORE_FILE}} | base64 -d > debug.keystore
@@ -30,6 +42,7 @@ jobs:
           export ORG_GRADLE_PROJECT_RELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
           export ORG_GRADLE_PROJECT_RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }}
           export ORG_GRADLE_PROJECT_RELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
+          ENVFILE=.env
           ./gradlew assembleRelease
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
