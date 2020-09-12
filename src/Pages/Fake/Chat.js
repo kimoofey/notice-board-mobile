@@ -4,9 +4,26 @@ import {FlatList, Image, ScrollView, StyleSheet, Text, TouchableHighlight, View}
 
 const styles = StyleSheet.create({
     logo: {
-        width: 25,
-        height: 25,
+        width: 30,
+        height: 30,
+        borderRadius: 40,
+        borderWidth: 3,
     },
+    row: {
+        flexDirection: 'row'
+    },
+    horizontal: {
+        flexDirection: 'column',
+        padding: 20,
+        borderBottomWidth: 1,
+    },
+    container: {
+        flex: 1,
+    },
+    title: {
+        fontSize: 20,
+        paddingLeft: 10
+    }
 });
 
 export default class FakeChat extends React.Component {
@@ -52,13 +69,14 @@ export default class FakeChat extends React.Component {
                                 currentPeerUser: item
                             });
                         }}
+                        style={styles.horizontal}
                     >
-                        <View>
+                        <View style={styles.row}>
                             <Image
                                 style={styles.logo}
-                                source={item.URL}
+                                source={{uri: item.URL}}
                             />
-                            <Text>{`Name: ${item.name}`}</Text>
+                            <Text style={styles.title}>{item.name}</Text>
                         </View>
                     </TouchableHighlight>
                 </ScrollView>)
@@ -67,24 +85,12 @@ export default class FakeChat extends React.Component {
 
     render() {
         return (
-            <View>
-                <View>
-                    <View>
-                        <TouchableHighlight onPress={() => this.onProfileClick}>
-                            <Image
-                                style={styles.logo}
-                                source={this.currentUserPhoto}
-                            />
-                        </TouchableHighlight>
-                    </View>
-                    <View>
-                        <FlatList
-                            data={this.searchUsers}
-                            renderItem={this.renderListUser}
-                            keyExtractor={item => item.id}
-                        />
-                    </View>
-                </View>
+            <View style={styles.container}>
+                <FlatList
+                    data={this.searchUsers}
+                    renderItem={this.renderListUser}
+                    keyExtractor={item => item.id}
+                />
             </View>
         );
     }
