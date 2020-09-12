@@ -12,17 +12,11 @@ import Security from "../Pages/Security";
 import Sidebar from '../Components/Sidebar';
 import FakeChat from "../Pages/Fake/Chat";
 import FakeChatBox from "../Pages/Fake/Chatbox";
+import FAQ from "../Pages/FAQ/FAQ";
+import Settings from "../Pages/Settings/Settings";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
-
-const Settings = ({navigator}) => {
-    return (<Text>Settings</Text>);
-};
-
-const FAQ = ({navigator}) => {
-    return (<Text>FAQ</Text>);
-};
 
 const ChatNavigator = () => {
     return (

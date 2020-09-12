@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {Text, TouchableHighlight, View, Button} from "react-native";
-import {Link} from "react-router-native";
+import {Button, Text, TouchableHighlight, View} from "react-native";
 // import images from '../../ProjectImages/ProjectImages';
 
 export default class HomePage extends Component {
@@ -13,7 +12,7 @@ export default class HomePage extends Component {
     };
 
     onPress = () =>
-        this.props.navigation.navigate('Chat', { name: this.state.name });
+        this.props.navigation.navigate('Chat', {name: this.state.name});
 
     render() {
         return (
@@ -28,8 +27,8 @@ export default class HomePage extends Component {
                         <View id="custom-button-wrapper">
                             <TouchableHighlight onPress={() => alert('Pressed!')}>
                                 <Button
-                                title="Click to log in"
-                                onPress={() => this.props.navigation.navigate('LogIn')}
+                                    title="Click to log in"
+                                    onPress={() => this.props.navigation.navigate('LogIn')}
                                 />
                             </TouchableHighlight>
                         </View>
