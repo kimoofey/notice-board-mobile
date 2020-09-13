@@ -1,28 +1,11 @@
 import React from 'react';
-import {FlatList, Image, ScrollView, StyleSheet, Text, TouchableHighlight, View} from "react-native";
+import {ScrollView, StyleSheet, TouchableHighlight, View} from "react-native";
+import {Avatar, ListItem} from 'react-native-elements';
 
 
 const styles = StyleSheet.create({
-    logo: {
-        width: 30,
-        height: 30,
-        borderRadius: 40,
-        borderWidth: 3,
-    },
-    row: {
-        flexDirection: 'row'
-    },
-    horizontal: {
-        flexDirection: 'column',
-        padding: 20,
-        borderBottomWidth: 1,
-    },
     container: {
         flex: 1,
-    },
-    title: {
-        fontSize: 20,
-        paddingLeft: 10
     }
 });
 
@@ -42,55 +25,56 @@ export default class FakeChat extends React.Component {
                 key: 1,
                 id: 0,
                 URL: 'https://www.redditinc.com/assets/images/site/reddit-logo.png',
-                api: 'https://www.reddit.com/r/memes/top/.json?count=1'
+                api: 'https://www.reddit.com/r/memes/top/.json?count=1',
+                description: 'Best memes for you',
             },
             {
                 name: 'Gamer News',
                 key: 2,
                 id: 0,
                 URL: 'https://www.redditinc.com/assets/images/site/reddit-logo.png',
-                api: 'https://www.reddit.com/r/gamernews/top/.json?count=1'
+                api: 'https://www.reddit.com/r/gamernews/top/.json?count=1',
+                description: 'Gamers news 24/7',
             },
         ];
         this.notificationMessagesErase = [];
     }
 
-    renderListUser = ({item}) => {
-        if (item.id !== this.currentUserId) {
-            return (
-                <ScrollView>
-                    <TouchableHighlight
-                        onPress={() => {
-                            this.setState({
-                                currentPeerUser: item,
-                                displayedContactswithNotification: this.notificationMessagesErase,
-                            });
-                            this.props.navigation.navigate('ChatBox', {
-                                currentPeerUser: item
-                            });
+    renderListUser = () => {
+        return (this.searchUsers.filter(item => item.id !== this.currentUserId).map((item, index) => (
+            <TouchableHighlight
+                onPress={() => {
+                    this.setState({
+                        currentPeerUser: item,
+                        displayedContactswithNotification: this.notificationMessagesErase,
+                    });
+                    this.props.navigation.navigate('ChatBox', {
+                        currentPeerUser: item
+                    });
+                }}
+            >
+                <ListItem key={index} bottomDivider>
+                    <Avatar
+                        rounded
+                        source={{
+                            uri: item.URL,
                         }}
-                        style={styles.horizontal}
-                    >
-                        <View style={styles.row}>
-                            <Image
-                                style={styles.logo}
-                                source={{uri: item.URL}}
-                            />
-                            <Text style={styles.title}>{item.name}</Text>
-                        </View>
-                    </TouchableHighlight>
-                </ScrollView>)
-        }
+                    />
+                    <ListItem.Content>
+                        <ListItem.Title>{item.name}</ListItem.Title>
+                        <ListItem.Subtitle>{item.description}</ListItem.Subtitle>
+                    </ListItem.Content>
+                </ListItem>
+            </TouchableHighlight>
+        )));
     };
 
     render() {
         return (
             <View style={styles.container}>
-                <FlatList
-                    data={this.searchUsers}
-                    renderItem={this.renderListUser}
-                    keyExtractor={item => item.id}
-                />
+                <ScrollView>
+                    {this.renderListUser()}
+                </ScrollView>
             </View>
         );
     }

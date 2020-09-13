@@ -62,6 +62,7 @@ export default class ChatBox extends React.Component {
     // }
     //
     componentDidMount() {
+        this.props.navigation.setOptions({title: this.props.route.params.currentPeerUser.name});
         this.getUserData().then(() => {
             this.getListHistory().then();
         });

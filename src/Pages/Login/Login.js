@@ -1,7 +1,8 @@
 import React from 'react';
 import LoginString from "../../CONSTS/LoginStrings";
 import axios from 'axios';
-import {Button, Text, TextInput, View} from "react-native";
+import {Text, View} from "react-native";
+import {Button, Card, Input} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Login extends React.Component {
@@ -11,7 +12,12 @@ export default class Login extends React.Component {
             isLoading: true,
             email: '',
             password: '',
+            error: false,
         };
+    }
+
+    componentWillUnmount() {
+        this.setState({email: '', password: '', error: false})
     }
 
     handleChangeEmail = (email) => this.setState({email: email});
@@ -41,6 +47,7 @@ export default class Login extends React.Component {
                 password: this.state.password,
             },)
                 .then((currentdata) => {
+                    this.setState({error: false});
                     const {data} = currentdata;
                     if (currentdata) {
                         AsyncStorage.setItem(LoginString.FirebaseDocumentId, data[0].docId);
@@ -57,8 +64,9 @@ export default class Login extends React.Component {
                 .catch((error) => {
                     // document.getElementById('1').innerHTML = 'incorrect email/password or poor internet';
                 });
-        } catch(e) {
+        } catch (e) {
             // save error
+            this.setState({error: true})
         }
 
     }
@@ -66,43 +74,38 @@ export default class Login extends React.Component {
     render() {
         return (
             <View>
-                {/*<form style={form} noValidate onSubmit={this.handleSubmit}>*/}
-                <TextInput
-                    placeholder="Email"
-                    autoCompleteType="email"
-                    keyboardType="email-address"
-                    autoFocus
-                    onChangeText={this.handleChangeEmail}
-                    value={this.state.email}
-                />
-                <TextInput
-                    placeholder="Password"
-                    onChangeText={this.handleChangePassword}
-                    secureTextEntry={true}
-                    value={this.state.password}
-                />
-                {/*<FormControlLabel*/}
-                {/*    control={<Checkbox value="remember" color="primary"/>}*/}
-                {/*    label="Remember me"*/}
-                {/*/>*/}
-                {this.state.error ? (
-                    <Text className="text-danger">{this.state.error}</Text>
-                ) : null}
+                <Card>
+                    <Input
+                        autoFocus
+                        autoCompleteType="email"
+                        keyboardType="email-address"
+                        placeholder='email@address.com'
+                        leftIcon={{type: 'font-awesome', name: 'envelope'}}
+                        onChangeText={this.handleChangeEmail}
+                        value={this.state.email}
+                        label={'Your Email Address'}
+                    />
+                    <Input
+                        secureTextEntry={true}
+                        placeholder='Password'
+                        leftIcon={{type: 'font-awesome', name: 'lock'}}
+                        onChangeText={this.handleChangePassword}
+                        value={this.state.password}
+                        label={'Password'}
+                    />
+                    {this.state.error ? (
+                        <Text className="text-danger">{'Wrong email or password'}</Text>
+                    ) : null}
 
-                <Button title="Log In" onPress={() => this.handleSubmit()}/>
-
-                <View className="CenterAliningItems">
-                    <Text>Don't have and account?</Text>
+                    <Button title="Log In" onPress={() => this.handleSubmit()}/>
+                    <Card.Divider/>
+                    <Card.FeaturedSubtitle style={{color: 'gray', textAlign: 'center'}}>Don't have
+                        account?</Card.FeaturedSubtitle>
                     <Button
                         title="Sign Up"
-                        // onPress={() => navigation.navigate('SignUp')}
                         onPress={() => this.props.navigation.navigate('SignUp')}
                     />
-                </View>
-                {/*<div className="error">*/}
-                {/*    <p id='1' style={{color: 'red'}}></p>*/}
-                {/*</div>*/}
-                {/*</form>*/}
+                </Card>
             </View>
         );
     }

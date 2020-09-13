@@ -1,5 +1,6 @@
-import {Button, Dimensions, StyleSheet, Text, TextInput, TouchableHighlight, View} from "react-native";
 import React, {Component} from "react";
+import {View} from "react-native";
+import {Button, Card, Input} from 'react-native-elements';
 import AsyncStorage from "@react-native-community/async-storage";
 import LoginString from "../../CONSTS/LoginStrings";
 import axios from "axios";
@@ -64,48 +65,29 @@ class Settings extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <View>
-                    <Text>Name</Text>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            onChangeText={text => this.setState({name: text})}
-                            defaultValue={this.state.name}
-                        />
-                    </View>
-                </View>
-                <View>
-                    <Text>About me</Text>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            onChangeText={text => this.setState({description: text})}
-                            defaultValue={this.state.description}
-                        />
-                    </View>
-                </View>
+            <Card>
+                <Card.Title>Settings</Card.Title>
+                <Input
+                    leftIcon={{type: 'font-awesome', name: 'user'}}
+                    onChangeText={text => this.setState({name: text})}
+                    defaultValue={this.state.name}
+                    label={'Name'}
+                />
+                <Input
+                    leftIcon={{type: 'font-awesome', name: 'id-badge'}}
+                    onChangeText={text => this.setState({description: text})}
+                    defaultValue={this.state.description}
+                    label={'About me'}
+                />
                 <View>
                     <Button
                         title="Save"
                         onPress={() => this.handleSave()}
                     />
                 </View>
-            </View>
+            </Card>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    inputContainer: {
-        flexDirection: 'row',
-        borderWidth: 1,
-        width: Dimensions.get('window').width / 2
-    },
-});
 
 export default Settings;

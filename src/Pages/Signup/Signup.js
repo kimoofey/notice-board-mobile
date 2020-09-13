@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Button, Text, TextInput, View} from "react-native";
+import {ScrollView} from "react-native";
+import {Button, Card, Input} from 'react-native-elements';
 
 export default class SignUp extends Component {
     constructor() {
@@ -8,8 +9,12 @@ export default class SignUp extends Component {
             email: '',
             password: '',
             name: '',
-            error: null,
+            error: false,
         };
+    }
+
+    componentWillUnmount() {
+        this.setState({email: '', password: '', name: '', error: false})
     }
 
     handleChangeEmail = (email) => this.setState({email: email});
@@ -52,44 +57,52 @@ export default class SignUp extends Component {
 
     render() {
         return (
-            <View>
-                <TextInput
-                    placeholder="Email"
-                    autoCompleteType="email"
-                    keyboardType="email-address"
-                    autoFocus
-                    onChangeText={this.handleChangeEmail}
-                    value={this.state.email}
-                />
+            <ScrollView>
+                <Card>
+                    <Card.Title>Registration Form</Card.Title>
+                    <Card.Divider/>
+                    <Input
+                        autoFocus
+                        autoCompleteType="email"
+                        keyboardType="email-address"
+                        placeholder="email@address.com"
+                        leftIcon={{type: 'font-awesome', name: 'envelope'}}
+                        onChangeText={this.handleChangeEmail}
+                        value={this.state.email}
+                        label={'Your Email Address'}
+                    />
 
-                <TextInput
-                    placeholder="Password"
-                    onChangeText={this.handleChangePassword}
-                    secureTextEntry={true}
-                    value={this.state.password}
-                />
-                <Text style={{color: 'grey'}}>Password :length Greater
-                    than 6 (alphabet,number,special character)</Text>
-
-                <TextInput
-                    placeholder="Name"
-                    onChangeText={this.handleChangeName}
-                    value={this.state.name}
-                />
-                <Text style={{color: 'grey'}}>Please fill all fields and password should be
-                    greater than 6</Text>
-                <Button
-                    title="Sign Up"
-                    onPress={() => alert('hello')}
-                />
-                <View>
-                    <Text style={{color: 'grey'}}>Already have and account?</Text>
+                    <Input
+                        secureTextEntry={true}
+                        placeholder="Password"
+                        leftIcon={{type: 'font-awesome', name: 'lock'}}
+                        onChangeText={this.handleChangePassword}
+                        value={this.state.password}
+                        label={'Password'}
+                    />
+                    <Card.FeaturedSubtitle style={{color: 'gray', textAlign: 'center'}}>Password
+                        should be
+                        greater than 6</Card.FeaturedSubtitle>
+                    <Input
+                        placeholder="Name"
+                        leftIcon={{type: 'font-awesome', name: 'user'}}
+                        onChangeText={this.handleChangeName}
+                        value={this.state.name}
+                        label={'Your Name'}
+                    />
+                    <Button
+                        title="Sign Up"
+                        onPress={() => alert('hello')}
+                    />
+                    <Card.Divider/>
+                    <Card.FeaturedSubtitle style={{color: 'gray', textAlign: 'center'}}>Already have and
+                        account?</Card.FeaturedSubtitle>
                     <Button
                         title="Login In"
                         onPress={() => this.props.navigation.navigate('LogIn')}
                     />
-                </View>
-            </View>
+                </Card>
+            </ScrollView>
         );
     }
 }

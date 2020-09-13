@@ -89,6 +89,8 @@ target 'noticeboardmobile' do
 
   pod 'react-native-config', :path => '../node_modules/react-native-config'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   post_install do |installer|
     flipper_post_install(installer)
   end

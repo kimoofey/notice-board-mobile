@@ -27,6 +27,7 @@ export default class FakeChatBox extends React.Component {
     }
 
     componentDidMount() {
+        this.props.navigation.setOptions({title: this.props.route.params.currentPeerUser.name});
         this.getPosts();
     }
 

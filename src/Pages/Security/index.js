@@ -1,5 +1,6 @@
-import {StyleSheet, Text, TextInput, View} from "react-native";
 import React, {useState} from "react";
+import {StyleSheet, View} from "react-native";
+import {Input} from 'react-native-elements';
 import AsyncStorage from "@react-native-community/async-storage";
 import LoginString from "../../CONSTS/LoginStrings";
 
@@ -28,11 +29,10 @@ const Security = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <Text>Enter passcode</Text>
-            <View style={styles.inputContainer}>
-                <TextInput
-                    placeholder="Auth password"
+            <View>
+                <Input
                     autoFocus
+                    placeholder="Passcode"
                     textAlign="center"
                     maxLength={4}
                     secureTextEntry={true}
@@ -41,6 +41,7 @@ const Security = ({navigation}) => {
                     onChangeText={setPassword}
                     value={password}
                     onSumbitEditing={checkCredentials()}
+                    label={'Enter passcode'}
                 />
             </View>
         </View>
@@ -53,9 +54,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    inputContainer: {
-        borderWidth: 1,
     }
 });
 

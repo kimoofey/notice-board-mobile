@@ -2,30 +2,16 @@ import React from 'react';
 import axios from 'axios';
 import LoginString from '../../CONSTS/LoginStrings';
 import AsyncStorage from '@react-native-community/async-storage';
-import {FlatList, Image, ScrollView, StyleSheet, Text, TouchableHighlight, View} from "react-native";
+import {StyleSheet, TouchableHighlight, View, ScrollView} from "react-native";
+import {Avatar, ListItem} from 'react-native-elements';
 
 
 const styles = StyleSheet.create({
     logo: {
-        width: 30,
-        height: 30,
-        borderRadius: 40,
-        borderWidth: 3,
-    },
-    row: {
-        flexDirection: 'row'
-    },
-    horizontal: {
-        flexDirection: 'column',
-        padding: 20,
-        borderBottomWidth: 1,
+        backgroundColor: 'grey',
     },
     container: {
         flex: 1,
-    },
-    title: {
-        fontSize: 20,
-        paddingLeft: 10
     }
 });
 
@@ -47,11 +33,13 @@ export default class Chat extends React.Component {
         this.notificationMessagesErase = [];
     }
 
-    getUserData = async () => {
-        this.currentUserDocumentId = await AsyncStorage.getItem(LoginString.FirebaseDocumentId);
-        this.currentUserId = await AsyncStorage.getItem(LoginString.ID);
-        this.currentUserPhoto = await AsyncStorage.getItem(LoginString.PhotoURL);
-        this.currentUserName = await AsyncStorage.getItem(LoginString.Name);
+    getUserData = () => {
+        AsyncStorage.getItem(LoginString.FirebaseDocumentId)
+            .then(result => this.currentUserDocumentId = result);
+        AsyncStorage.getItem(LoginString.ID)
+            .then(result => this.currentUserId = result);
+        // this.currentUserPhoto = AsyncStorage.getItem(LoginString.PhotoURL);
+        // this.currentUserName = AsyncStorage.getItem(LoginString.Name);
     };
 
     onProfileClick = () => {
@@ -155,41 +143,45 @@ export default class Chat extends React.Component {
             });
     };
 
-    renderListUser = ({item}) => {
-        if (item.id !== this.currentUserId) {
-            return (
-                <ScrollView>
-                    <TouchableHighlight
-                        onPress={() => {
-                            this.notificationErase(item.id);
-                            this.setState({
-                                currentPeerUser: item,
-                                displayedContactswithNotification: this.notificationMessagesErase,
-                            });
-                            this.props.navigation.navigate('ChatBox', {
-                                currentPeerUser: item
-                            });
-                            // document.getElementById(item.key).style.backgroundColor = '#fff';
-                            // if (document.getElementById(item.key)) {
-                            //     document.getElementById(item.key).style.color = '#fff';
-                            // }
-                        }}
-                        style={styles.horizontal}
-                    >
-                        <View style={styles.row}>
-                            <Image
-                                style={styles.logo}
-                                source={{uri: item.URL}}
-                            />
-                            <Text style={styles.title}>{item.name}</Text>
-                        </View>
-                        {/*{classname === 'viewWrapItemNotification' ?*/}
-                        {/*    <div className='notificationpragraph'>*/}
-                        {/*        <p id={item.key} className="newmessages">New</p>*/}
-                        {/*    </div> : null}*/}
-                    </TouchableHighlight>
-                </ScrollView>)
-        }
+    renderListUser = () => {
+        return (this.searchUsers.filter(item => item.id !== this.currentUserId).map((item, index) => (
+            <TouchableHighlight
+                onPress={() => {
+                    this.notificationErase(item.id);
+                    this.setState({
+                        currentPeerUser: item,
+                        displayedContactswithNotification: this.notificationMessagesErase,
+                    });
+                    this.props.navigation.navigate('ChatBox', {
+                        currentPeerUser: item
+                    });
+                    // document.getElementById(item.key).style.backgroundColor = '#fff';
+                    // if (document.getElementById(item.key)) {
+                    //     document.getElementById(item.key).style.color = '#fff';
+                    // }
+                }}
+                // style={styles.horizontal}
+            >
+                <ListItem key={index} bottomDivider>
+                    {item.URL
+                        ? <Avatar
+                            rounded
+                            source={{
+                                uri: item.URL,
+                            }}
+                        />
+                        : <Avatar
+                            rounded
+                            title={item.name.slice(0, 1)}
+                            containerStyle={styles.logo}
+                        />}
+                    <ListItem.Content>
+                        <ListItem.Title>{item.name}</ListItem.Title>
+                        <ListItem.Subtitle>{item.description}</ListItem.Subtitle>
+                    </ListItem.Content>
+                </ListItem>
+            </TouchableHighlight>
+        )));
     };
     //
     // searchHandler = (event) => {
@@ -261,20 +253,9 @@ export default class Chat extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <FlatList
-                    data={this.searchUsers}
-                    renderItem={this.renderListUser}
-                    keyExtractor={item => item.id}
-                />
-                {/*<div className="viewBoard">*/}
-                {/*    {this.state.currentPeerUser ? (*/}
-                {/*        <ChatBox currentPeerUser={this.state.currentPeerUser}*/}
-                {/*                 showToast={this.props.showToast}*/}
-                {/*        />) : (<WelcomeBoard*/}
-                {/*            currentUserName={this.currentUserName}*/}
-                {/*            currentUserPhoto={this.currentUserPhoto}/>*/}
-                {/*    )}*/}
-                {/*</div>*/}
+                <ScrollView>
+                    {this.renderListUser()}
+                </ScrollView>
             </View>
         );
     }
