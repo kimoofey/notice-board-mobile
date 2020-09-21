@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import {ScrollView} from "react-native";
 import {Button, Card, Input} from 'react-native-elements';
+import axios from "axios";
+import LoginString from "../../CONSTS/LoginStrings";
+import AsyncStorage from "@react-native-community/async-storage";
 
 export default class SignUp extends Component {
     constructor() {
@@ -10,11 +13,19 @@ export default class SignUp extends Component {
             password: '',
             name: '',
             error: false,
+            safeCode: '',
+            passCode: '',
         };
     }
 
     componentWillUnmount() {
-        this.setState({email: '', password: '', name: '', error: false})
+        this.setState({
+            name: '',
+            password: '',
+            url: '',
+            safeCode: '',
+            passCode: '',
+        });
     }
 
     handleChangeEmail = (email) => this.setState({email: email});
@@ -23,36 +34,38 @@ export default class SignUp extends Component {
 
     handleChangePassword = (password) => this.setState({password: password});
 
-    async handleSubmit(event) {
+    handleChangePassCode = (password) => this.setState({passCode: password});
 
-        // const { password, email, name } = this.state;
-        // event.preventDefault();
-        // this.setState({ error: '' });
-        // await axios.post('/api/user', {
-        //     email: email,
-        //     password: password,
-        //     nickname: name,
-        // })
-        //     .then((response) => {
-        //         localStorage.setItem(LoginString.FirebaseDocumentId, response.data.docId);
-        //         localStorage.setItem(LoginString.ID, response.data.id);
-        //         localStorage.setItem(LoginString.Name, response.data.name);
-        //         localStorage.setItem(LoginString.Email, response.data.email);
-        //         localStorage.setItem(LoginString.Password, response.data.password);
-        //         localStorage.setItem(LoginString.PhotoURL, response.data.URL);
-        //         localStorage.setItem(LoginString.Description, response.data.description);
-        //
-        //         this.setState({
-        //             name: '',
-        //             password: '',
-        //             url: '',
-        //         });
-        //
-        //         this.props.history.push('/chat');
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
+    handleChangeSafeCode = (password) => this.setState({safeCode: password});
+
+    async handleSubmit() {
+        try {
+            const {password, email, name, safeCode, passCode} = this.state;
+            await axios.post('https://web-notice-board-server-dev.herokuapp.com/api/user', {
+                email: email,
+                password: password,
+                nickname: name,
+                safeCode: safeCode,
+                passCode: passCode,
+            })
+                .then(async (response) => {
+                    const {data} = response;
+                    if (response) {
+                        await AsyncStorage.setItem(LoginString.FirebaseDocumentId, data.docId);
+                        await AsyncStorage.setItem(LoginString.ID, data.id);
+                        await AsyncStorage.setItem(LoginString.Name, data.name);
+                        await AsyncStorage.setItem(LoginString.PhotoURL, data.URL);
+                        await AsyncStorage.setItem(LoginString.Description, data.description);
+                        await AsyncStorage.setItem(LoginString.passCode, data.passCode);
+                        await AsyncStorage.setItem(LoginString.safeCode, data.safeCode);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     render() {
@@ -90,9 +103,31 @@ export default class SignUp extends Component {
                         value={this.state.name}
                         label={'Your Name'}
                     />
+                    <Input
+                        leftIcon={{type: 'font-awesome', name: 'comments'}}
+                        placeholder="Password"
+                        maxLength={4}
+                        secureTextEntry={true}
+                        keyboardType="number-pad"
+                        multiline={false}
+                        onChangeText={this.handleChangePassCode}
+                        value={this.state.passCode}
+                        label={'Password for chat access'}
+                    />
+                    <Input
+                        leftIcon={{type: 'font-awesome', name: 'user-secret'}}
+                        placeholder="password"
+                        maxLength={4}
+                        secureTextEntry={true}
+                        keyboardType="number-pad"
+                        multiline={false}
+                        onChangeText={this.handleChangeSafeCode}
+                        value={this.state.safeCode}
+                        label={'Password for fake chat access'}
+                    />
                     <Button
                         title="Sign Up"
-                        onPress={() => alert('hello')}
+                        onPress={() => this.handleSubmit()}
                     />
                     <Card.Divider/>
                     <Card.FeaturedSubtitle style={{color: 'gray', textAlign: 'center'}}>Already have and

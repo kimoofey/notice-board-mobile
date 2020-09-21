@@ -24,41 +24,25 @@ export default class Login extends React.Component {
 
     handleChangePassword = (password) => this.setState({password: password});
 
-    componentDidMount() {
-        // if (localStorage.getItem(LoginString.ID)) {
-        //     this.setState({ isLoading: false }, () => {
-        //         this.setState({ isLoading: false });
-        //         this.props.showToast(1, 'Login succes');
-        //         this.props.history.push('./chat');
-        //     });
-        // } else {
-        //     this.setState({ isLoading: false });
-        // }
-    }
-
     async handleSubmit() {
         try {
-            // await AsyncStorage.setItem('test', this.state.email);
-            // console.log(await AsyncStorage.getItem('test'));
-            // await AsyncStorage.clear()
-
             await axios.post('https://web-notice-board-server-dev.herokuapp.com/api/user/auth', {
                 email: this.state.email,
                 password: this.state.password,
             },)
-                .then((currentdata) => {
+                .then(async (currentdata) => {
                     this.setState({error: false});
                     const {data} = currentdata;
                     if (currentdata) {
-                        AsyncStorage.setItem(LoginString.FirebaseDocumentId, data[0].docId);
-                        AsyncStorage.setItem(LoginString.ID, data[0].id);
-                        AsyncStorage.setItem(LoginString.Name, data[0].name);
-                        AsyncStorage.setItem(LoginString.Email, data[0].email);
-                        AsyncStorage.setItem(LoginString.Password, data[0].password);
-                        AsyncStorage.setItem(LoginString.PhotoURL, data[0].URL);
-                        AsyncStorage.setItem(LoginString.Description, data[0].description);
-                        AsyncStorage.setItem(LoginString.passCode, data[0].passCode);
-                        AsyncStorage.setItem(LoginString.safeCode, data[0].safeCode);
+                        await AsyncStorage.setItem(LoginString.FirebaseDocumentId, data[0].docId);
+                        await AsyncStorage.setItem(LoginString.ID, data[0].id);
+                        await AsyncStorage.setItem(LoginString.Name, data[0].name);
+                        await AsyncStorage.setItem(LoginString.Email, data[0].email);
+                        await AsyncStorage.setItem(LoginString.Password, data[0].password);
+                        await AsyncStorage.setItem(LoginString.PhotoURL, data[0].URL);
+                        await AsyncStorage.setItem(LoginString.Description, data[0].description);
+                        await AsyncStorage.setItem(LoginString.passCode, data[0].passCode);
+                        await AsyncStorage.setItem(LoginString.safeCode, data[0].safeCode);
                     }
                 })
                 .catch((error) => {

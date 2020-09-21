@@ -46,7 +46,7 @@ class MyStack extends Component {
 
     isSigned = async () => {
         try {
-            return await AsyncStorage.getItem('email').then((result) => this.setState({auth: result}));
+            return await AsyncStorage.getItem('id').then((result) => this.setState({auth: result}));
         } catch (error) {
 
         }
